@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<title>Sentiment Analyzer</title>
@@ -7,18 +8,19 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<!-- Font-->
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/opensans-font.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='fonts/line-awesome/css/line-awesome.min.css') }}">
+	<link rel="stylesheet" type="text/css"
+		href="{{ url_for('static',filename='fonts/line-awesome/css/line-awesome.min.css') }}">
 	<!-- Jquery -->
 	<link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
 	<!-- Main Style Css -->
 	<link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}" />
 
-	
-    <style>
+
+	<style>
 		h1 {
 			color: green;
 		}
-		 
+
 		select {
 			-webkit-appearance: none;
 			-moz-appearance: none;
@@ -29,7 +31,7 @@
 			background-image: none;
 			border: none;
 		}
-		 
+
 		.select {
 			position: relative;
 			display: block;
@@ -40,7 +42,7 @@
 			overflow: hidden;
 			border: none;
 		}
-		 
+
 		select {
 			width: 100%;
 			height: 100%;
@@ -50,11 +52,11 @@
 			cursor: pointer;
 			border: none;
 		}
-		 
+
 		select::-ms-expand {
 			display: none;
 		}
-		 
+
 		.select::after {
 			content: '\25BC';
 			position: absolute;
@@ -65,11 +67,11 @@
 			background: #34495E;
 			pointer-events: none;
 		}
-		 
+
 		.select:hover::after {
 			color: #F39C12;
 		}
-		</style>
+	</style>
 </head>
 
 <body class="form-v4">
@@ -77,8 +79,12 @@
 		<div class="form-v4-content">
 			<div class="form-left">
 				<h2>How it works?</h2>
-				<p class="text-1">Select the value of the (#)Hashtag. You can take any popular hashtag value for example #influencer, #competetion, #influencermaketing, etc.<br><br>Enter a valid integer to limit the number of records.</p>
-				<p class="text-2"><span>Note:</span> In case the total tweets are less than the mentioned number to limit the records, then all the tweets will be fetched irrespective of entered value to limit the records.</p>
+				<p class="text-1">Select the value of the (#)Hashtag. You can take any popular hashtag value for example
+					#influencer, #competetion, #influencermaketing, etc.<br><br>Enter a valid integer to limit the
+					number of records.</p>
+				<p class="text-2"><span>Note:</span> In case the total tweets are less than the mentioned number to
+					limit the records, then all the tweets will be fetched irrespective of entered value to limit the
+					records.</p>
 			</div>
 			<form class="form-detail" action="result" method="post" id="myform">
 				<h2>Analyze sentiment from particular Hashtag</h2>
@@ -106,6 +112,6 @@
 			</form>
 		</div>
 	</div>
-	<!-- Cloned in hp desktop -->
 </body>
+
 </html>

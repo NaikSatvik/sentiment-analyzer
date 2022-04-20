@@ -15,18 +15,6 @@ nltk.download('wordnet')
 nltk.download('omw-1.4')
 stop_words = stopwords.words('english')
 from flask import Flask, render_template, request, Response
-app = Flask(__name__)
-
-# twitter creds
-key = 'K6gd1YLuinBhwza3hsd4J0q8x'
-secret = '64CLjWg5WlAz2FobRCNDUNhwLly06DeN5reTeI7qG64xtYrbYD'
-access_token = '1505776500527988738-PLscmTb4lsnPlb18B84CHemOB3xoYl'
-access_token_secret = 'SU7yC9BtKgrivpoCjrmms2zYyI2NBMya02zPKbRotnZNa'
-
-# Authentication
-auth = tw.OAuthHandler(key,secret)
-auth.set_access_token(access_token,access_token_secret)
-api = tw.API(auth, wait_on_rate_limit=True)
 
 def clean_tweets(tweet):
     rm_rt = re.sub('RT\s+'," ",tweet)
@@ -51,6 +39,18 @@ def getAnalysis(score):
     else:
         return 'Positive'
 
+
+# twitter creds
+key = 'K6gd1YLuinBhwza3hsd4J0q8x'
+secret = '64CLjWg5WlAz2FobRCNDUNhwLly06DeN5reTeI7qG64xtYrbYD'
+access_token = '1505776500527988738-PLscmTb4lsnPlb18B84CHemOB3xoYl'
+access_token_secret = 'SU7yC9BtKgrivpoCjrmms2zYyI2NBMya02zPKbRotnZNa'
+
+# Authentication
+auth = tw.OAuthHandler(key,secret)
+auth.set_access_token(access_token,access_token_secret)
+api = tw.API(auth, wait_on_rate_limit=True)
+
 def sentiment_analyzer(hashtag, limit):
     query = tw.Cursor(api.search_tweets, q=hashtag).items(limit)
     tweets = [{'Tweets':tweet.text, 'Timestamp':tweet.created_at} for tweet in query]
@@ -62,6 +62,8 @@ def sentiment_analyzer(hashtag, limit):
     df['subjectivity'] = df['Cleaned/Preprocessed Tweet'].apply(lambda x:TextBlob(x).sentiment[1])
     df['sentiment'] = df['polarity'].apply(getAnalysis)
     return df
+
+app = Flask(__name__)
 
 @app.route('/')
 def home():
@@ -106,15 +108,15 @@ if __name__ == "__main__":
         from http.server import SimpleHTTPRequestHandler as Handler
         from http.server import HTTPServer as Server
 
-        # Read port selected by the cloud for our application
-        PORT = int(os.getenv('PORT', 8000))
-        # Change current directory to avoid exposure of control files
-        os.chdir('static')
-        httpd = Server(("", PORT), Handler)
+    # Read port selected by the cloud for our application
+    PORT = int(os.getenv('PORT', 8000))
+    # Change current directory to avoid exposure of control files
+    os.chdir('static')
+    httpd = Server(("", PORT), Handler)
     try:
         print("Start serving at port %i" % PORT)
         app.run(debug=True)
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass
-        httpd.server_close()
+    httpd.server_close()
