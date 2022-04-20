@@ -2,7 +2,7 @@ applications:
   - path: .
     name: py-sentiment-analyzer
     environment_json: {}
-    memory: 128M
+    memory: 500M
     instances: 1
     disk_quota: 1024M
     services: []
