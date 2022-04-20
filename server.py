@@ -111,7 +111,6 @@ if __name__ == "__main__":
     PORT = int(os.getenv('PORT', 8000))
     # Change current directory to avoid exposure of control files
     os.chdir('static')
-    os.chdir('templates')
     httpd = Server(("", PORT), Handler)
     try:
         print("Start serving at port %i" % PORT)
