@@ -6,36 +6,40 @@ import io
 import re
 import emoji
 import nltk
+import json
 from nltk.corpus import stopwords
 from textblob import Word, TextBlob
+from cloudant.client import Cloudant
+
 nltk.download('stopwords')
 nltk.download('wordnet')
 nltk.download('omw-1.4')
 stop_words = stopwords.words('english')
 
 from flask import Flask, render_template, request, Response
-# try:
-#   from SimpleHTTPServer import SimpleHTTPRequestHandler as Handler
-#   from SocketServer import TCPServer as Server
-# except ImportError:
-#   from http.server import SimpleHTTPRequestHandler as Handler
-#   from http.server import HTTPServer as Server
+try:
+  from SimpleHTTPServer import SimpleHTTPRequestHandler as Handler
+  from SocketServer import TCPServer as Server
+except ImportError:
+  from http.server import SimpleHTTPRequestHandler as Handler
+  from http.server import HTTPServer as Server
 
-# # Read port selected by the cloud for our application
-# PORT = int(os.getenv('PORT', 8000))
-# # Change current directory to avoid exposure of control files
-# os.chdir('static')
+# Read port selected by the cloud for our application
+PORT = int(os.getenv('PORT', 8000))
+# Change current directory to avoid exposure of control files
+os.chdir('static')
 
-# httpd = Server(("", PORT), Handler)
-# try:
-#   print("Start serving at port %i" % PORT)
-#   httpd.serve_forever()
-# except KeyboardInterrupt:
-#   pass
-# httpd.server_close()
+httpd = Server(("", PORT), Handler)
+try:
+  print("Start serving at port %i" % PORT)
+  httpd.serve_forever()
+except KeyboardInterrupt:
+  pass
+httpd.server_close()
 
 app = Flask(__name__)
 
+# twitter creds
 key = 'K6gd1YLuinBhwza3hsd4J0q8x'
 secret = '64CLjWg5WlAz2FobRCNDUNhwLly06DeN5reTeI7qG64xtYrbYD'
 access_token = '1505776500527988738-PLscmTb4lsnPlb18B84CHemOB3xoYl'
@@ -90,8 +94,31 @@ def result():
     if request.method == "POST":
         hashtag=request.form['hashtag']
         limit=request.form['limit']
+        yes_or_no=request.form['yesno']
         data = sentiment_analyzer(hashtag,int(limit))
-        return render_template('index.html', title = "Sentiment Results", sentiment = data['sentiment'].value_counts(0), hashtag="Hashtag:- "+request.form['hashtag'], limit="No. of records:- "+request.form['limit'], tables=[data.to_html()],titles=[''])
+        conf = ""
+        if yes_or_no == "yes":
+            # cloudant creds
+            serviceUsername = "apikey-v2-169qb0zw2y9tierpovrxm8i044etwvmm5pwdus2d9k90"
+            servicePassword = "b48741742c768b83b0c625b84bbca3d3"
+            serviceURL = "https://apikey-v2-169qb0zw2y9tierpovrxm8i044etwvmm5pwdus2d9k90:b48741742c768b83b0c625b84bbca3d3@b545a08b-2796-4479-8e6d-f52bf1054559-bluemix.cloudantnosqldb.appdomain.cloud"
+
+            client = Cloudant(serviceUsername, servicePassword, url=serviceURL)
+            client.connect()
+
+            databaseName = 'tweet-hash-analysis'
+            myDatabaseDemo = client.create_database(databaseName)
+            if myDatabaseDemo.exists():
+                print("'{0}' successfully created.\n".format(databaseName))
+
+            df_to_cloud = data.to_json(orient = 'records')
+            data_obj = json.loads(df_to_cloud)
+            for i in data_obj:
+                newDocument = myDatabaseDemo.create_document(i)
+            if newDocument.exists():
+                print("Document '{0}' successfully created.")
+            conf = "Data successfully stored to cloudant."
+        return render_template('results.html', conf=conf, title = "Sentiment Results", sentiments = data['sentiment'].value_counts(0), hashtag=""+request.form['hashtag'], limit="No. of records:- "+request.form['limit'], tables=[data.to_html(classes='table table-stripped')],titles=[''])
 
 if __name__ == "__main__":
     app.run(debug=True)
