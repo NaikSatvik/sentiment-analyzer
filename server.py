@@ -1,6 +1,5 @@
 import os
 import tweepy as tw
-import numpy as np
 import pandas as pd
 import io
 import re
