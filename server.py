@@ -38,7 +38,6 @@ def getAnalysis(score):
     else:
         return 'Positive'
 
-
 # twitter creds
 key = 'K6gd1YLuinBhwza3hsd4J0q8x'
 secret = '64CLjWg5WlAz2FobRCNDUNhwLly06DeN5reTeI7qG64xtYrbYD'
@@ -62,10 +61,8 @@ def sentiment_analyzer(hashtag, limit):
     df['sentiment'] = df['polarity'].apply(getAnalysis)
     return df
 
+app = Flask(__name__,static_url_path='')
 port = int(os.getenv('PORT', 8000))
-
-app = Flask(__name__)
-
 
 @app.route('/')
 def home():
