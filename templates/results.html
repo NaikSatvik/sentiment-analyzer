@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,7 +8,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <title>Sentiment Analyzer</title>
 </head>
-
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
@@ -22,8 +20,7 @@
             <div class="container">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h1>Tweets fetched & analyzed which contains the value <span style="color: red;">{{ hashtag
-                                }}</span> <br> <span style="color: green;"><i>{{ conf }}</i></span></h1>
+                        <h1>Tweets fetched & analyzed which contains the value <span style="color: red;">{{ hashtag }}</span> <br> <span style="color: green;"><i>{{ conf }}</i></span></h1>
                     </div>
                     <div class="panel-body">
                         {% for table in tables %}
@@ -36,5 +33,4 @@
         </div>
     </div>
 </body>
-
 </html>
