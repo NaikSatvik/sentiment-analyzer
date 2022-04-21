@@ -15,6 +15,10 @@ nltk.download('omw-1.4')
 stop_words = stopwords.words('english')
 from flask import Flask, render_template, request, Response
 
+app = Flask(__name__,static_url_path='')
+
+port = int(os.getenv('PORT', 8000))
+
 def clean_tweets(tweet):
     rm_rt = re.sub('RT\s+'," ",tweet)
     rm_at = re.sub('\B@\w+'," ",rm_rt)
@@ -61,9 +65,6 @@ def sentiment_analyzer(hashtag, limit):
     df['sentiment'] = df['polarity'].apply(getAnalysis)
     return df
 
-app = Flask(__name__,static_url_path='')
-port = int(os.getenv('PORT', 8000))
-
 @app.route('/')
 def home():
     return render_template("index.html")
@@ -89,7 +90,6 @@ def result():
             myDatabaseDemo = client.create_database(databaseName)
             if myDatabaseDemo.exists():
                 print("'{0}' successfully created.\n".format(databaseName))
-
             df_to_cloud = data.to_json(orient = 'records')
             data_obj = json.loads(df_to_cloud)
             for i in data_obj:
