@@ -3,7 +3,11 @@ applications:
     name: py-sentiment-analyzer
     random-route: true
     environment_json: {}
+<<<<<<< HEAD
     memory: 128M
+=======
+    memory: 256M
+>>>>>>> a15ac8e3f5bebfae72a55fb6f4cb716afaa03b8f
     instances: 1
     disk_quota: 1024M
     services: []

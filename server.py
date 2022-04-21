@@ -1,6 +1,5 @@
 import os
 import tweepy as tw
-import numpy as np
 import pandas as pd
 import io
 import re
@@ -15,18 +14,6 @@ nltk.download('wordnet')
 nltk.download('omw-1.4')
 stop_words = stopwords.words('english')
 from flask import Flask, render_template, request, Response
-app = Flask(__name__)
-
-# twitter creds
-key = 'K6gd1YLuinBhwza3hsd4J0q8x'
-secret = '64CLjWg5WlAz2FobRCNDUNhwLly06DeN5reTeI7qG64xtYrbYD'
-access_token = '1505776500527988738-PLscmTb4lsnPlb18B84CHemOB3xoYl'
-access_token_secret = 'SU7yC9BtKgrivpoCjrmms2zYyI2NBMya02zPKbRotnZNa'
-
-# Authentication
-auth = tw.OAuthHandler(key,secret)
-auth.set_access_token(access_token,access_token_secret)
-api = tw.API(auth, wait_on_rate_limit=True)
 
 def clean_tweets(tweet):
     rm_rt = re.sub('RT\s+'," ",tweet)
@@ -51,6 +38,18 @@ def getAnalysis(score):
     else:
         return 'Positive'
 
+
+# twitter creds
+key = 'K6gd1YLuinBhwza3hsd4J0q8x'
+secret = '64CLjWg5WlAz2FobRCNDUNhwLly06DeN5reTeI7qG64xtYrbYD'
+access_token = '1505776500527988738-PLscmTb4lsnPlb18B84CHemOB3xoYl'
+access_token_secret = 'SU7yC9BtKgrivpoCjrmms2zYyI2NBMya02zPKbRotnZNa'
+
+# Authentication
+auth = tw.OAuthHandler(key,secret)
+auth.set_access_token(access_token,access_token_secret)
+api = tw.API(auth, wait_on_rate_limit=True)
+
 def sentiment_analyzer(hashtag, limit):
     query = tw.Cursor(api.search_tweets, q=hashtag).items(limit)
     tweets = [{'Tweets':tweet.text, 'Timestamp':tweet.created_at} for tweet in query]
@@ -63,7 +62,11 @@ def sentiment_analyzer(hashtag, limit):
     df['sentiment'] = df['polarity'].apply(getAnalysis)
     return df
 
+<<<<<<< HEAD
 port = int(os.getenv('PORT', 8000))
+=======
+app = Flask(__name__)
+>>>>>>> a15ac8e3f5bebfae72a55fb6f4cb716afaa03b8f
 
 @app.route('/')
 def home():
@@ -101,4 +104,26 @@ def result():
         return render_template('results.html', conf=conf, title = "Sentiment Results", sentiments = data['sentiment'].value_counts(0), hashtag=""+request.form['hashtag'], limit="No. of records:- "+request.form['limit'], tables=[data.to_html(classes='table table-stripped')],titles=[''])
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     app.run(host='0.0.0.0', port=port, debug=True)
+=======
+    try:
+        from SimpleHTTPServer import SimpleHTTPRequestHandler as Handler
+        from SocketServer import TCPServer as Server
+    except ImportError:
+        from http.server import SimpleHTTPRequestHandler as Handler
+        from http.server import HTTPServer as Server
+
+    # Read port selected by the cloud for our application
+    PORT = int(os.getenv('PORT', 8000))
+    # Change current directory to avoid exposure of control files
+    os.chdir('static')
+    httpd = Server(("", PORT), Handler)
+    try:
+        print("Start serving at port %i" % PORT)
+        app.run(debug=True)
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    httpd.server_close()
+>>>>>>> a15ac8e3f5bebfae72a55fb6f4cb716afaa03b8f
