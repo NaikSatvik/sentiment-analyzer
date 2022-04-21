@@ -63,6 +63,8 @@ def sentiment_analyzer(hashtag, limit):
     df['sentiment'] = df['polarity'].apply(getAnalysis)
     return df
 
+port = int(os.getenv('PORT', 8000))
+
 @app.route('/')
 def home():
     return render_template("index.html")
@@ -99,22 +101,4 @@ def result():
         return render_template('results.html', conf=conf, title = "Sentiment Results", sentiments = data['sentiment'].value_counts(0), hashtag=""+request.form['hashtag'], limit="No. of records:- "+request.form['limit'], tables=[data.to_html(classes='table table-stripped')],titles=[''])
 
 if __name__ == "__main__":
-    try:
-        from SimpleHTTPServer import SimpleHTTPRequestHandler as Handler
-        from SocketServer import TCPServer as Server
-    except ImportError:
-        from http.server import SimpleHTTPRequestHandler as Handler
-        from http.server import HTTPServer as Server
-
-        # Read port selected by the cloud for our application
-        PORT = int(os.getenv('PORT', 8000))
-        # Change current directory to avoid exposure of control files
-        os.chdir('static')
-        httpd = Server(("", PORT), Handler)
-    try:
-        print("Start serving at port %i" % PORT)
-        app.run(debug=True)
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        pass
-        httpd.server_close()
+    app.run(host='0.0.0.0', port=port, debug=True)

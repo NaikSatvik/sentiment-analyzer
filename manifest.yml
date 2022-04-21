@@ -1,8 +1,9 @@
 applications:
   - path: .
     name: py-sentiment-analyzer
+    random-route: true
     environment_json: {}
-    memory: 500M
+    memory: 128M
     instances: 1
     disk_quota: 1024M
     services: []
