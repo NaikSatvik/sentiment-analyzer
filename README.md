@@ -1,6 +1,6 @@
 # Python Hello World Sample
 
-This application demonstrates a simple, reusable Python web application.
+This application demonstrates a simple, reusable Python web application. A Python Flask based application which fetches the tweets from twitter based on the particular hashtag (#) &amp; provides the sentiment as Positive, Negative or Neutral.
 
 ## Run the app locally
 
